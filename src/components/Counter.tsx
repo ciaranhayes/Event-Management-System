@@ -24,7 +24,7 @@ function Counter () {
         refCount.current = refCount.current - 1;
     }
 
-    function stopMinus() {
+    function stopCount() {
         setCount(count)
     }
 
@@ -77,7 +77,7 @@ function Counter () {
         <h2 style={dangerStyling}>Current guests: {count}</h2>
         <h3 style={dangerStyling}>{warning}</h3>
         {started === true && <div><h2>Capacity Percentage: {percentageIn}%</h2><h3>Max Capacity: {maxCapacity}</h3></div>}
-        {started === false ? <div><input type="number" onChange={handleMaxValue} /><button onClick={makeStarted} disabled={started}>Start</button></div>  : <div><button onClick={count > 0 ?  removeVisitors : stopMinus}>-</button> <button onClick={addVisitors}>+</button></div>}
+        {started === false ? <div><input type="number" onChange={handleMaxValue} /><button onClick={makeStarted} disabled={started}>Start</button></div>  : <div><button onClick={count > 0 ?  removeVisitors : stopCount}>-</button> <button onClick={count < maxCapacity ? addVisitors : stopCount}>+</button></div>}
         {hourCount.map((hourNumberAtStart, index) => <p key={index}>{hourNumberAtStart}</p>)}
         </>
     )
