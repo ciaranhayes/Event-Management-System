@@ -8,8 +8,9 @@ function Counter () {
     const [hourCount, setHourCount] = useState<number[]>([]);
     const [maxCapacity, setMaxCapacity] = useState<number>(0);
     const [warning, setWarning] = useState("");
-    const [percentageIn, setPercentageIn] = useState<number>();
+    const [percentageIn, setPercentageIn] = useState<number>(0);
     const [dangerStyling, setDangerStyling] = useState<React.CSSProperties>({});
+    const [spacesLeft, setSpacesLeft] = useState<number>();
 
     let refCount = useRef(0);
 
@@ -54,6 +55,10 @@ function Counter () {
     }
 
     useEffect(() => {
+        setSpacesLeft(maxCapacity - count);
+    }, [count])
+
+    useEffect(() => {
         let percentage = Math.floor((count/maxCapacity) * 100);
         setPercentageIn(percentage)
         if (percentage >= 100) setWarning("Capacity full");
@@ -76,6 +81,7 @@ function Counter () {
         <h2>Total Today: {total}</h2>
         <h2 style={dangerStyling}>Current guests: {count}</h2>
         <h3 style={dangerStyling}>{warning}</h3>
+        <h4>{percentageIn >= 90 && `Spaces left: ${spacesLeft}`}</h4>
         {started === true && <div><h2>Capacity Percentage: {percentageIn}%</h2><h3>Max Capacity: {maxCapacity}</h3></div>}
         {started === false ? <div><input type="number" onChange={handleMaxValue} /><button onClick={makeStarted} disabled={started}>Start</button></div>  : <div><button onClick={count > 0 ?  removeVisitors : stopCount}>-</button> <button onClick={count < maxCapacity ? addVisitors : stopCount}>+</button></div>}
         {hourCount.map((hourNumberAtStart, index) => <p key={index}>{hourNumberAtStart}</p>)}
