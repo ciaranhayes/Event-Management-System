@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useFormState } from "react-dom";
 
 function Counter () {
     const [total, setTotal] = useState(0);
@@ -6,6 +7,7 @@ function Counter () {
     const [started, setStarted] = useState(false);
     const [countOnHour, setCountOnHour] = useState<number | null>(null);
     const [hourCount, setHourCount] = useState<number[]>([]);
+    const [maxCapacity, setMaxCapacity] = useState<number>();
 
     let refCount = useRef(0);
 
@@ -28,15 +30,14 @@ function Counter () {
         setStarted(true);
         let now = new Date();
         let target = new Date();
-        target.setHours(1, 45, 0, 0);
-        const delay = 20000;
-        target.getTime() - now.getTime();
+        target.setHours(14, 19, 0, 0);
+        const delay = target.getTime() - now.getTime();
 
         console.log("Started clicked at:", new Date().toLocaleTimeString());
         
         setTimeout(() => {
             setCountOnHour(refCount.current);
-        }, delay);
+        }, delay);5
     }
 
     useEffect(() => {
@@ -45,14 +46,18 @@ function Counter () {
             setHourCount(prev => [...prev, countOnHour]);
         }
     }, [countOnHour]);
+
+    function handleMaxValue(e: React.ChangeEvent<HTMLInputElement>) {
+        setMaxCapacity(Number(e.target.value))
+    }
     
     return (
         <>
         <h1>Counter</h1>
         <h2>Total Today: {total}</h2>
         <h2>Current guests: {count}</h2>
-        <h3></h3>
-        {started === false ? <button onClick={makeStarted} disabled={started}>Start</button> : <div><button onClick={count > 0 ?  removeVisitors : stopMinus}>-</button> <button onClick={addVisitors}>+</button></div>}
+        {started === true && <h3>Max Capacity: {maxCapacity}</h3>}
+        {started === false ? <div><input type="number" onChange={handleMaxValue} /><button onClick={makeStarted} disabled={started}>Start</button></div>  : <div><button onClick={count > 0 ?  removeVisitors : stopMinus}>-</button> <button onClick={addVisitors}>+</button></div>}
         {hourCount.map((hourNumberAtStart, index) => <p key={index}>{hourNumberAtStart}</p>)}
         </>
     )
