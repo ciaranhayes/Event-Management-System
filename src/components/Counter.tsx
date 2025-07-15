@@ -9,6 +9,7 @@ function Counter () {
     const [maxCapacity, setMaxCapacity] = useState<number>(0);
     const [warning, setWarning] = useState("");
     const [percentageIn, setPercentageIn] = useState<number>();
+    const [dangerStyling, setDangerStyling] = useState<React.CSSProperties>({});
 
     let refCount = useRef(0);
 
@@ -51,21 +52,30 @@ function Counter () {
     function handleMaxValue(e: React.ChangeEvent<HTMLInputElement>) {
         setMaxCapacity(Number(e.target.value))
     }
+
     useEffect(() => {
         let percentage = Math.floor((count/maxCapacity) * 100);
         setPercentageIn(percentage)
         if (percentage >= 100) setWarning("Capacity full");
-        else if (percentage >= 90) setWarning("You are nearly at capacity");
-        else if (percentage >= 80) setWarning("Starting to get full");
-    }, [count])
-    
-    
+        else if (percentage >= 90) {
+            setWarning("You are nearly at capacity");
+            setDangerStyling({color: "red"});
+        }
+        else if (percentage >= 80) {
+            setWarning("Starting to get full");
+            setDangerStyling({color: "orange"});
+        } else {
+            setWarning("");
+            setDangerStyling({color: "white"});
+        }
+    }, [count, percentageIn])
+
     return (
         <>
         <h1>Counter</h1>
         <h2>Total Today: {total}</h2>
-        <h2>Current guests: {count}</h2>
-        <h3>{warning}</h3>
+        <h2 style={dangerStyling}>Current guests: {count}</h2>
+        <h3 style={dangerStyling}>{warning}</h3>
         {started === true && <div><h2>Capacity Percentage: {percentageIn}%</h2><h3>Max Capacity: {maxCapacity}</h3></div>}
         {started === false ? <div><input type="number" onChange={handleMaxValue} /><button onClick={makeStarted} disabled={started}>Start</button></div>  : <div><button onClick={count > 0 ?  removeVisitors : stopMinus}>-</button> <button onClick={addVisitors}>+</button></div>}
         {hourCount.map((hourNumberAtStart, index) => <p key={index}>{hourNumberAtStart}</p>)}
