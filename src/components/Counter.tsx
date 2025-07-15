@@ -20,12 +20,16 @@ function Counter () {
         refCount.current = refCount.current - 1;
     }
 
+    function stopMinus() {
+        setCount(count)
+    }
+
     function makeStarted() {
         setStarted(true);
         let now = new Date();
         let target = new Date();
         target.setHours(1, 45, 0, 0);
-        const delay = 10000;
+        const delay = 20000;
         target.getTime() - now.getTime();
 
         console.log("Started clicked at:", new Date().toLocaleTimeString());
@@ -35,7 +39,6 @@ function Counter () {
         }, delay);
     }
 
-
     useEffect(() => {
         console.log("countOnHour changed:", countOnHour);
         if (countOnHour !== null) {
@@ -43,14 +46,13 @@ function Counter () {
         }
     }, [countOnHour]);
     
-
     return (
         <>
         <h1>Counter</h1>
         <h2>Total Today: {total}</h2>
         <h2>Current guests: {count}</h2>
         <h3></h3>
-        {started === false ? <button onClick={makeStarted} disabled={started}>Start</button> : <div><button onClick={removeVisitors}>-</button> <button onClick={addVisitors}>+</button></div>}
+        {started === false ? <button onClick={makeStarted} disabled={started}>Start</button> : <div><button onClick={count > 0 ?  removeVisitors : stopMinus}>-</button> <button onClick={addVisitors}>+</button></div>}
         {hourCount.map((hourNumberAtStart, index) => <p key={index}>{hourNumberAtStart}</p>)}
         </>
     )
