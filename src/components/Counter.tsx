@@ -15,27 +15,31 @@ function Counter() {
 
   let refCount = useRef(0);
 
+  // Adding on the counter and total
   function addVisitors() {
     setCount(count + 1);
     setTotal(total + 1);
     refCount.current = refCount.current + 1;
   }
 
+  // Subtraction on the counter
   function removeVisitors() {
     setCount(count - 1);
     refCount.current = refCount.current - 1;
   }
 
+  // Stops counter working when you go over or under
   function stopCount() {
     setCount(count);
   }
 
+  // Handles how long the timer function should run
   function handleShiftLength(e: React.ChangeEvent<HTMLInputElement>) {
     setShiftLength(Number(e.target.value));
   }
 
-  function makeStarted() {
-    setStarted(true);
+  // Timer function for getting the hourly stats
+  function handleTimer() {
     let now = new Date();
     let target = new Date();
     let hour: number = now.getHours();
@@ -51,6 +55,13 @@ function Counter() {
     console.log("Started clicked at:", new Date().toLocaleTimeString());
   }
 
+  // Handles the start of the starting function
+  function makeStarted() {
+    setStarted(true);
+    handleTimer();
+  }
+
+  // Effect for getting the count on the hour
   useEffect(() => {
     console.log("countOnHour changed:", countOnHour);
     if (countOnHour !== null) {
@@ -58,14 +69,17 @@ function Counter() {
     }
   }, [countOnHour]);
 
+  // Getting the max capacity and being able to set it
   function handleMaxValue(e: React.ChangeEvent<HTMLInputElement>) {
     setMaxCapacity(Number(e.target.value));
   }
 
+  // Effect for setting spaces left and showing it on screen
   useEffect(() => {
     setSpacesLeft(maxCapacity - count);
   }, [count]);
 
+  // Effect for getting percentages of capacity
   useEffect(() => {
     let percentage = Math.floor((count / maxCapacity) * 100);
     setPercentageIn(percentage);
