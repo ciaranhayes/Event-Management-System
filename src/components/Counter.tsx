@@ -11,6 +11,7 @@ function Counter() {
   const [percentageIn, setPercentageIn] = useState<number>(0);
   const [dangerStyling, setDangerStyling] = useState<React.CSSProperties>({});
   const [spacesLeft, setSpacesLeft] = useState<number>();
+  const [shiftLength, setShiftLength] = useState<number>(0);
 
   let refCount = useRef(0);
 
@@ -29,12 +30,18 @@ function Counter() {
     setCount(count);
   }
 
+  function handleShiftLength(e: React.ChangeEvent<HTMLInputElement>) {
+    setShiftLength(Number(e.target.value));
+  }
+
   function makeStarted() {
     setStarted(true);
     let now = new Date();
     let target = new Date();
-    for (let i = 0; i < 10; i++) {
-      target.setHours(21, (35 + i), 0, 0);
+    let hour: number = now.getHours();
+    let minute: number = now.getMinutes();
+    for (let i = 0; i <= shiftLength; i++) {
+      target.setHours(hour, (minute + i), 0, 0);
       let delay = target.getTime() - now.getTime();
       setTimeout(() => {
       setCountOnHour(refCount.current);
@@ -87,11 +94,13 @@ function Counter() {
           <h2>
             Capacity Percentage: {percentageIn > 0 ? `${percentageIn}%` : `0%`}
           </h2>
+          <p>{shiftLength}</p>
           <h3>Max Capacity: {maxCapacity}</h3>
         </div>
       )}
       {started === false ? (
         <div>
+          <input type="number" placeholder="How Long is the Event?" onChange={handleShiftLength}/>
           <input type="number" onChange={handleMaxValue} />
           <button onClick={makeStarted} disabled={started}>
             Start
