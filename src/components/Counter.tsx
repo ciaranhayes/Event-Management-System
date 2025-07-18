@@ -5,13 +5,14 @@ function Counter() {
   const [count, setCount] = useState(0);
   const [started, setStarted] = useState(false);
   const [countOnHour, setCountOnHour] = useState<number | null>(null);
-  const [hourCount, setHourCount] = useState<number[]>([]);
+  const [hourCount, setHourCount] = useState<{ hour: number, peopleIn: number }[]>([]);
   const [maxCapacity, setMaxCapacity] = useState<number>(0);
   const [warning, setWarning] = useState("");
   const [percentageIn, setPercentageIn] = useState<number>(0);
   const [dangerStyling, setDangerStyling] = useState<React.CSSProperties>({});
   const [spacesLeft, setSpacesLeft] = useState<number>();
   const [shiftLength, setShiftLength] = useState<number>(0);
+  const [currentHour, setCurrentHour] = useState<number>(0);
 
   let refCount = useRef(0);
 
@@ -49,6 +50,7 @@ function Counter() {
       let delay = target.getTime() - now.getTime();
       setTimeout(() => {
       setCountOnHour(refCount.current);
+      setCurrentHour(minute + i);
     }, delay);
     5;
     }
@@ -63,11 +65,11 @@ function Counter() {
 
   // Effect for getting the count on the hour
   useEffect(() => {
-    console.log("countOnHour changed:", countOnHour);
-    if (countOnHour !== null) {
-      setHourCount((prev) => [...prev, countOnHour]);
-    }
-  }, [countOnHour]);
+  if (countOnHour !== null && currentHour !== null) {
+    setHourCount((prev) => [...prev, { hour: currentHour, peopleIn: countOnHour }]);
+  }
+}, [countOnHour]);
+
 
   // Getting the max capacity and being able to set it
   function handleMaxValue(e: React.ChangeEvent<HTMLInputElement>) {
@@ -128,8 +130,8 @@ function Counter() {
           </button>
         </div>
       )}
-      {hourCount.map((hourNumberAtStart, index) => (
-        <p key={index}>{hourNumberAtStart}</p>
+      {hourCount.map((entry, index) => (
+        <p key={index}>00:{entry.hour < 10 ? `0${entry.hour}` : entry.hour} - {entry.peopleIn} people</p>
       ))}
     </>
   );
