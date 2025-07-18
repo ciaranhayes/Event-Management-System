@@ -158,17 +158,33 @@ function Counter() {
         </div>
       )}
 
-      <div>
-        {hourCount.map((entry, index) => (
-          <p key={index}>
-            00:{entry.hour < 10 ? `0${entry.hour}` : entry.hour} -{" "}
-            {entry.peopleIn} people
-          </p>
-        ))}
-        {hourCountHights.map((highest, index) => (
-          <p key={index}>00:{highest.hour} -{" "}{highest.peopleIn}</p>
-        ))}
-      </div>
+      {started === true && (
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>People In |</th>
+                <th>| Highest</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                {hourCount.map((entry, index) => (
+                  <td key={index}>
+                    00:{entry.hour < 10 ? `0${entry.hour}` : entry.hour} -{" "}
+                    {entry.peopleIn} people
+                  </td>
+                ))}
+                {hourCountHights.map((highest, index) => (
+                  <td key={index}>
+                    00:{highest.hour} - {highest.peopleIn}
+                  </td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
