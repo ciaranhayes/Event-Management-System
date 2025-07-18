@@ -89,11 +89,20 @@ function Counter() {
     setSpacesLeft(maxCapacity - count);
   }, [count]);
 
+  // Working out logic for the stats of highest number within the hour
   useEffect(() => {
     if (count > highestInHour) {
       setHighestInHour(count);
     }
   }, [count]);
+
+  useEffect(() => {
+    setHourCountHights((prev) => [
+      ...prev,
+      { hour: currentHour, peopleIn: highestInHour },
+    ]);
+    setHighestInHour(0);
+  }, [countOnHour]);
 
   // Effect for getting percentages of capacity
   useEffect(() => {
@@ -148,15 +157,18 @@ function Counter() {
           </button>
         </div>
       )}
-      {hourCount.map((entry, index) => (
-        <div>
+
+      <div>
+        {hourCount.map((entry, index) => (
           <p key={index}>
             00:{entry.hour < 10 ? `0${entry.hour}` : entry.hour} -{" "}
             {entry.peopleIn} people
           </p>
-          <p>{highestInHour}</p>
-        </div>
-      ))}
+        ))}
+        {hourCountHights.map((highest, index) => (
+          <p key={index}>00:{highest.hour} -{" "}{highest.peopleIn}</p>
+        ))}
+      </div>
     </>
   );
 }
