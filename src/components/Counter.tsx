@@ -19,6 +19,9 @@ function Counter() {
   const [hourCountHights, setHourCountHights] = useState<
     { hour: number; peopleIn: number }[]
   >([]);
+  const [allData, setAllData] = useState<
+    { hour1: number; hour2: number; peopleIn1: number; peopleIn2: number }[]
+  >([]);
 
   let refCount = useRef(0);
 
@@ -103,6 +106,12 @@ function Counter() {
     ]);
     setHighestInHour(0);
   }, [countOnHour]);
+
+  // Effect for setting all the data
+  useEffect(() => {
+    setAllData((prevs) => [...prevs, {hour1: hourCount.hour; hour2: number; peopleIn1: number; peopleIn2: number}])
+
+  }, [countOnHour, highestInHour])
 
   // Effect for getting percentages of capacity
   useEffect(() => {
